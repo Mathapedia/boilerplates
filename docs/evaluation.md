@@ -33,7 +33,7 @@ Both repos are the same setup with a different root file (`rls.tex` / `hvm.tex`)
 | ------------------------------------ | ----------------------------------------------------------------------------------------- |
 | five chained commands                | `latexmk -pdfps` with `latexmkrc`; reruns only what changed, handles bibtex/cleveref loops |
 | output in `tex/`                     | everything in `build/` (git-ignored)                                                      |
-| `pyramation/pstricks-latex`, built by hand, amd64 | same Ubuntu image, now `ghcr.io/mathapedia/latex` (Mathapedia/docker): + latexmk/chktex/latexindent/biber/IEEEtran, built and pushed multi-arch by CI |
+| `pyramation/pstricks-latex`, built by hand, amd64 | same Ubuntu image, now `mathapedia/latex` (Mathapedia/docker): + latexmk/chktex/latexindent/biber/IEEEtran, built and pushed multi-arch by CI |
 | committed PNG/PDF from Mermaid       | only `.mmd` committed; `make figures` renders to EPS via mermaid-cli (ghcr) + Ghostscript |
 | no watch / preview                   | `make watch` (`latexmk -pvc`), `make preview` (dvisvgm page SVGs + tiny static page that live-reloads) |
 | no lint                              | `make lint` (chktex, noisy rules off), `make fmt` (latexindent)                           |
@@ -59,7 +59,7 @@ package set is frozen by the distro rather than by a rolling `tlmgr` mirror,
 and the missing tooling was a single `apt-get install` line. The TeX Live
 version gap (2021 vs 2025) did not matter for any of the three papers. The
 repo moved to `Mathapedia/docker` with history, CI now publishes
-`ghcr.io/mathapedia/latex` (amd64 + arm64) on every push to `main` and on
+`mathapedia/latex` on Docker Hub and `ghcr.io/mathapedia/latex` (amd64 + arm64) on every push to `main` and on
 `v*` tags, and the template's `docker/Dockerfile` is a thin `FROM` extension
 for per-paper extras.
 
@@ -121,7 +121,7 @@ package; it should not gate the paper workflow.
    preview, lint/fmt, CI, pgpm scaffolding. Validated: `pgpm init --no-tty`,
    `make build` (PSTricks + TikZ + Mermaid EPS + bibtex), `make lint`,
    `make svg`, `make preview`.
-2. **Done** — `ghcr.io/mathapedia/latex` published from
+2. **Done** — `mathapedia/latex` (Docker Hub + GHCR) published from
    [Mathapedia/docker](https://github.com/Mathapedia/docker); `make` and CI pull
    it. Still open: pin a `vX.Y` tag per paper for reproducibility.
 3. Figure preview page using `latex2react` side by side with dvisvgm output;

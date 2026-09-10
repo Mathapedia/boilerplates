@@ -22,7 +22,7 @@ tex/
   figures/*.tex         PSTricks / TikZ figures, \input from sections
   figures/*.mmd         Mermaid sources, compiled to EPS by `make figures`
   references.bib
-docker/Dockerfile       optional extension of ghcr.io/mathapedia/latex
+docker/Dockerfile       optional extension of mathapedia/latex
 latexmkrc               build recipe: latex -> dvips -> ps2pdf, output in build/
 preview/index.html      live SVG page preview used by `make preview`
 build/                  generated, git-ignored
@@ -43,7 +43,7 @@ build/                  generated, git-ignored
 | `make image`   | build a local image from `docker/Dockerfile` (extra packages)            |
 | `make clean`   | `rm -rf build/`                                                          |
 
-Variables: `DOC=main` (root file name), `IMAGE=ghcr.io/mathapedia/latex:latest`,
+Variables: `DOC=main` (root file name), `IMAGE=mathapedia/latex:latest`,
 `MODE=-pdfps` (use `MODE=-pdf` for plain pdflatex if the paper has no
 PSTricks), `PORT=8000`.
 
@@ -65,7 +65,7 @@ inside that subset render identically in the PDF and in the browser.
 
 ## Adding a TeX package
 
-The image is [`ghcr.io/mathapedia/latex`](https://github.com/Mathapedia/docker)
+The image is [`mathapedia/latex`](https://github.com/Mathapedia/docker) (Docker Hub; also mirrored at `ghcr.io/mathapedia/latex`)
 (Ubuntu TeX Live: pstricks, pictures/TikZ, latex-extra, science, publishers,
 bibtex-extra, latexmk, chktex, latexindent, biber, dvisvgm). If something is
 missing, either open a PR there, or extend locally: put the Debian package in

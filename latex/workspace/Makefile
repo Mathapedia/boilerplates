@@ -13,7 +13,7 @@
 
 DOC   ?= main
 # Published from https://github.com/Mathapedia/docker
-IMAGE ?= ghcr.io/mathapedia/latex:latest
+IMAGE ?= mathapedia/latex:latest
 MODE  ?= -pdfps          # -pdfps: latex->dvips->ps2pdf (PSTricks). -pdf: pdflatex.
 PORT  ?= 8000
 MERMAID_IMAGE ?= ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:11.4.2

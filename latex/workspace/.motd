@@ -10,4 +10,4 @@
   make preview    live page preview at http://localhost:8000/preview/
   make shell      poke around inside TeX Live
 
-  Docker is the only dependency. First build pulls ghcr.io/mathapedia/latex (~5 GB).
+  Docker is the only dependency. First build pulls mathapedia/latex (~5 GB).

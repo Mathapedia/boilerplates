@@ -7,7 +7,7 @@
 #
 # or edit APT_EXTRA's default below, run `make image`, and set IMAGE in the
 # Makefile to the same name.
-ARG BASE=ghcr.io/mathapedia/latex:latest
+ARG BASE=mathapedia/latex:latest
 FROM ${BASE}
 
 ARG APT_EXTRA=""
