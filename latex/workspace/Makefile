@@ -16,7 +16,7 @@ DOC   ?= main
 IMAGE ?= mathapedia/latex:latest
 MODE  ?= -pdfps          # -pdfps: latex->dvips->ps2pdf (PSTricks). -pdf: pdflatex.
 PORT  ?= 8000
-MERMAID_IMAGE ?= ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:11.4.2
+MERMAID_IMAGE ?= minlag/mermaid-cli:11.4.2
 
 TEX_DIR   := tex
 BUILD_DIR := build

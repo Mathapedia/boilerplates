@@ -34,7 +34,7 @@ Both repos are the same setup with a different root file (`rls.tex` / `hvm.tex`)
 | five chained commands                | `latexmk -pdfps` with `latexmkrc`; reruns only what changed, handles bibtex/cleveref loops |
 | output in `tex/`                     | everything in `build/` (git-ignored)                                                      |
 | `pyramation/pstricks-latex`, built by hand, amd64 | same Ubuntu image, now `mathapedia/latex` (Mathapedia/docker): + latexmk/chktex/latexindent/biber/IEEEtran, built and pushed multi-arch by CI |
-| committed PNG/PDF from Mermaid       | only `.mmd` committed; `make figures` renders to EPS via mermaid-cli (ghcr) + Ghostscript |
+| committed PNG/PDF from Mermaid       | only `.mmd` committed; `make figures` renders to EPS via mermaid-cli (Docker Hub) + Ghostscript |
 | no watch / preview                   | `make watch` (`latexmk -pvc`), `make preview` (dvisvgm page SVGs + tiny static page that live-reloads) |
 | no lint                              | `make lint` (chktex, noisy rules off), `make fmt` (latexindent)                           |
 | CI: pull prebuilt image              | same, plus lint, page SVGs, PDF artifact, and the PDF attached to `v*` releases |
