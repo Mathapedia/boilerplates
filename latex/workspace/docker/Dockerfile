@@ -1,33 +1,20 @@
-# TeX Live toolchain for this paper.
+# Optional local extension of the Mathapedia TeX Live image
+# (https://github.com/Mathapedia/docker). You only need this if your paper
+# requires packages the published image lacks:
 #
-# Starts from the official TeX Live image (medium scheme, multi-arch) and adds
-# what the PSTricks -> dvips -> ps2pdf pipeline and a typical paper need.
-# `latexmk`, `dvisvgm`, `chktex`, `latexindent`, `biber` and Ghostscript are
-# already in the base image. Builds in ~2 minutes; the result is ~3.5 GB.
+#   docker build --build-arg APT_EXTRA="texlive-fonts-extra" -t my-paper docker
+#   make IMAGE=my-paper
 #
-# Rebuild with `make image`. Add packages with TLMGR_EXTRA, e.g.
-#   docker build --build-arg TLMGR_EXTRA="minted algorithm2e" -t <image> docker
-# or switch TEXLIVE_TAG to latest-full if you would rather have everything.
-ARG TEXLIVE_TAG=latest-medium
-FROM texlive/texlive:${TEXLIVE_TAG}
+# or edit APT_EXTRA's default below, run `make image`, and set IMAGE in the
+# Makefile to the same name.
+ARG BASE=ghcr.io/mathapedia/latex:latest
+FROM ${BASE}
 
-ARG TLMGR_EXTRA=""
-RUN tlmgr update --self >/dev/null 2>&1 || true \
- && tlmgr install \
-      collection-pstricks \
-      cleveref \
-      ieeetran \
-      pgfplots \
-      tikz-cd \
-      tcolorbox \
-      mdframed \
-      csquotes \
-      multirow \
-      todonotes \
-      standalone \
-      fontawesome5 \
-      ${TLMGR_EXTRA} \
- && tlmgr path add \
- && rm -rf /usr/local/texlive/*/tlpkg/backups /tmp/*
+ARG APT_EXTRA=""
+RUN if [ -n "${APT_EXTRA}" ]; then \
+      apt-get update \
+   && apt-get install -y --no-install-recommends ${APT_EXTRA} \
+   && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi
 
 WORKDIR /work

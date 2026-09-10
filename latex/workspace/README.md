@@ -22,7 +22,7 @@ tex/
   figures/*.tex         PSTricks / TikZ figures, \input from sections
   figures/*.mmd         Mermaid sources, compiled to EPS by `make figures`
   references.bib
-docker/Dockerfile       TeX Live image (texlive/texlive + pstricks/latexextra)
+docker/Dockerfile       optional extension of ghcr.io/mathapedia/latex
 latexmkrc               build recipe: latex -> dvips -> ps2pdf, output in build/
 preview/index.html      live SVG page preview used by `make preview`
 build/                  generated, git-ignored
@@ -39,11 +39,11 @@ build/                  generated, git-ignored
 | `make figures` | `tex/figures/*.mmd` → `build/figures/*.eps` via mermaid-cli + Ghostscript |
 | `make lint`    | `chktex` on the document                                                 |
 | `make fmt`     | `latexindent -w` over `tex/`                                             |
-| `make shell`   | bash inside the TeX Live container (`tlmgr install …`, `kpsewhich …`)   |
-| `make image`   | rebuild the Docker image after editing `docker/Dockerfile`               |
+| `make shell`   | bash inside the TeX Live container (`kpsewhich …`, `apt list texlive-*`)   |
+| `make image`   | build a local image from `docker/Dockerfile` (extra packages)            |
 | `make clean`   | `rm -rf build/`                                                          |
 
-Variables: `DOC=main` (root file name), `IMAGE=mathapedia/latex:local`,
+Variables: `DOC=main` (root file name), `IMAGE=ghcr.io/mathapedia/latex:latest`,
 `MODE=-pdfps` (use `MODE=-pdf` for plain pdflatex if the paper has no
 PSTricks), `PORT=8000`.
 
@@ -65,8 +65,12 @@ inside that subset render identically in the PDF and in the browser.
 
 ## Adding a TeX package
 
-`make shell`, then `tlmgr install <pkg>` to try it. Make it permanent by adding
-it to `TLMGR_EXTRA` in `docker/Dockerfile` and running `make image`.
+The image is [`ghcr.io/mathapedia/latex`](https://github.com/Mathapedia/docker)
+(Ubuntu TeX Live: pstricks, pictures/TikZ, latex-extra, science, publishers,
+bibtex-extra, latexmk, chktex, latexindent, biber, dvisvgm). If something is
+missing, either open a PR there, or extend locally: put the Debian package in
+`APT_EXTRA` in `docker/Dockerfile`, `make image IMAGE=my-paper`, and use
+`make IMAGE=my-paper` (or change the `IMAGE` default in the Makefile).
 
 ## Releases
 

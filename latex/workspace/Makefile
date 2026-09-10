@@ -8,11 +8,12 @@
 #   make lint       chktex
 #   make fmt        latexindent (in place)
 #   make shell      bash inside the TeX Live container
-#   make image      (re)build the Docker image from docker/Dockerfile
+#   make image      build a local image from docker/Dockerfile (extra packages)
 #   make clean      remove build/
 
 DOC   ?= main
-IMAGE ?= mathapedia/latex:local
+# Published from https://github.com/Mathapedia/docker
+IMAGE ?= ghcr.io/mathapedia/latex:latest
 MODE  ?= -pdfps          # -pdfps: latex->dvips->ps2pdf (PSTricks). -pdf: pdflatex.
 PORT  ?= 8000
 MERMAID_IMAGE ?= ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:11.4.2
@@ -82,7 +83,7 @@ $(BUILD_DIR)/figures/%.eps: $(TEX_DIR)/figures/%.mmd | image-if-missing
 		-sOutputFile=$@ $(BUILD_DIR)/figures/$*.pdf
 
 lint: image-if-missing
-	$(RUN) sh -c 'cd $(TEX_DIR) && chktex -q -n 1 -n 8 -n 13 -n 24 -n 36 $(DOC).tex'
+	$(RUN) sh -c 'cd $(TEX_DIR) && chktex -q -n 1 -n 8 -n 13 -n 24 -n 29 -n 36 $(DOC).tex'
 
 fmt: image-if-missing
 	$(RUN) sh -c 'cd $(TEX_DIR) && find . -name "*.tex" -exec latexindent -s -w -m -l -c ../build/ {} +'
@@ -90,11 +91,13 @@ fmt: image-if-missing
 shell: image-if-missing
 	$(RUN) bash
 
+# Extend the published image (e.g. extra apt/tlmgr packages), then run with
+# `make IMAGE=<name>` or set IMAGE at the top of this file.
 image:
 	docker build -t $(IMAGE) docker
 
 image-if-missing:
-	@docker image inspect $(IMAGE) >/dev/null 2>&1 || $(MAKE) image
+	@docker image inspect $(IMAGE) >/dev/null 2>&1 || docker pull $(IMAGE)
 
 clean:
 	rm -rf $(BUILD_DIR)

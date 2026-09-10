@@ -33,19 +33,35 @@ Both repos are the same setup with a different root file (`rls.tex` / `hvm.tex`)
 | ------------------------------------ | ----------------------------------------------------------------------------------------- |
 | five chained commands                | `latexmk -pdfps` with `latexmkrc`; reruns only what changed, handles bibtex/cleveref loops |
 | output in `tex/`                     | everything in `build/` (git-ignored)                                                      |
-| Ubuntu apt TeX Live, amd64           | official `texlive/texlive:latest-medium` + `tlmgr install` of what the pipeline needs; multi-arch; 90 s to build, 3.4 GB |
+| `pyramation/pstricks-latex`, built by hand, amd64 | same Ubuntu image, now `ghcr.io/mathapedia/latex` (Mathapedia/docker): + latexmk/chktex/latexindent/biber/IEEEtran, built and pushed multi-arch by CI |
 | committed PNG/PDF from Mermaid       | only `.mmd` committed; `make figures` renders to EPS via mermaid-cli (ghcr) + Ghostscript |
 | no watch / preview                   | `make watch` (`latexmk -pvc`), `make preview` (dvisvgm page SVGs + tiny static page that live-reloads) |
 | no lint                              | `make lint` (chktex, noisy rules off), `make fmt` (latexindent)                           |
-| CI: pull prebuilt image              | CI builds the same Dockerfile with a GHA layer cache, uploads PDF + SVGs, attaches the PDF to `v*` releases |
+| CI: pull prebuilt image              | same, plus lint, page SVGs, PDF artifact, and the PDF attached to `v*` releases |
 | ad-hoc project setup                 | `pgpm init workspace --repo Mathapedia/boilerplates` with author/title/license questions   |
 
-Image choice: `latest-full` is 9 GB and needs nothing installed; `latest-medium`
-+ collections `latexextra`/`publishers`/`bibtexextra` came out at 7.6 GB and
-22 minutes of `tlmgr` (rejected); `latest-medium` + `collection-pstricks` +
-a short list of common packages is 3.4 GB / 90 s and built the RLS whitepaper
-identically (42 pages). `TLMGR_EXTRA` and `TEXLIVE_TAG` build args cover the
-rest.
+### Image choice
+
+Two candidates were built and run against the RLS whitepaper (42 pages, both
+identical), the Hyperweb whitepaper and the template paper:
+
+| | `pyramation/pstricks-latex` (Dan's, now Mathapedia/docker) | `texlive/texlive:latest-medium` + tlmgr |
+| --- | --- | --- |
+| base | Ubuntu 22.04 apt packages, TeX Live 2021 | upstream TeX Live 2025, `tlmgr` works |
+| size / build | 4.4 GB → 5.0 GB with the additions; ~6 min apt | 3.4 GB; 90 s (after rejecting a 7.6 GB / 22 min variant) |
+| had out of the box | pstricks, TikZ, latex-extra, lang-all, xetex, dvisvgm, latexdiff, rtf2latex2e, Node | almost nothing for our pipeline: pstricks, cleveref, IEEEtran all had to be added |
+| missing for the template | latexmk, chktex, latexindent, biber, IEEEtran.bst (RLS vendors it in `tex/`) | latexdiff, Node, `apt` |
+| Ghostscript | 9.55 — `dvisvgm --pdf` works | 10.07 — too new for `dvisvgm --pdf` |
+| reproducibility | Debian-pinned, apt is stable for years | `latest-*` moves; would need digest pinning |
+
+The Ubuntu image won: it already had 90% of what the whitepapers need, its
+package set is frozen by the distro rather than by a rolling `tlmgr` mirror,
+and the missing tooling was a single `apt-get install` line. The TeX Live
+version gap (2021 vs 2025) did not matter for any of the three papers. The
+repo moved to `Mathapedia/docker` with history, CI now publishes
+`ghcr.io/mathapedia/latex` (amd64 + arm64) on every push to `main` and on
+`v*` tags, and the template's `docker/Dockerfile` is a thin `FROM` extension
+for per-paper extras.
 
 ## Graphics mapping: PDF vs browser
 
@@ -105,9 +121,9 @@ package; it should not gate the paper workflow.
    preview, lint/fmt, CI, pgpm scaffolding. Validated: `pgpm init --no-tty`,
    `make build` (PSTricks + TikZ + Mermaid EPS + bibtex), `make lint`,
    `make svg`, `make preview`.
-2. Publish `ghcr.io/mathapedia/latex` from this Dockerfile so `make` and CI
-   pull instead of build (set `IMAGE`), and pin by digest for reproducible
-   papers.
+2. **Done** — `ghcr.io/mathapedia/latex` published from
+   [Mathapedia/docker](https://github.com/Mathapedia/docker); `make` and CI pull
+   it. Still open: pin a `vX.Y` tag per paper for reproducibility.
 3. Figure preview page using `latex2react` side by side with dvisvgm output;
    a `pgpm init` question or `latex/figure` template for standalone
    interactive figures.
