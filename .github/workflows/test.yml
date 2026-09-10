@@ -1,0 +1,53 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # weekly: catches a broken mathapedia/latex:latest or pgpm release
+    - cron: "17 6 * * 1"
+
+jobs:
+  # Do exactly what a user does: scaffold a paper from this repo with pgpm,
+  # then build it with the published image.
+  latex-workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm i -g pgpm
+
+      - name: pgpm init workspace (from this checkout)
+        run: |
+          mkdir -p "$RUNNER_TEMP/out" && cd "$RUNNER_TEMP/out"
+          pgpm init workspace --repo "$GITHUB_WORKSPACE" --from-branch "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" --no-tty \
+            --name ci-paper --title "CI Paper" --fullName "CI" --email ci@example.com \
+            --repoName ci-paper --username mathapedia --license MIT
+          test ! "$(grep -rl '____' ci-paper || true)" || { echo "unreplaced template vars"; grep -rl '____' ci-paper; exit 1; }
+
+      - name: make build lint svg
+        working-directory: ${{ runner.temp }}/out/ci-paper
+        run: |
+          make build
+          make lint
+          make svg
+          test -s build/main.pdf
+          ls build/svg/*.svg
+
+      - name: docker extension image builds
+        working-directory: ${{ runner.temp }}/out/ci-paper
+        run: docker build --build-arg APT_EXTRA=texlive-humanities -t ci-paper-ext docker
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-paper
+          path: |
+            ${{ runner.temp }}/out/ci-paper/build/main.pdf
+            ${{ runner.temp }}/out/ci-paper/build/svg/*.svg
+          if-no-files-found: error
