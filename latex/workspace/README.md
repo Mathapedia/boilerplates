@@ -7,7 +7,7 @@ The only local dependency is Docker.
 
 ```sh
 make            # build/main.pdf
-make preview    # rebuild on save + live page preview at http://localhost:8000/preview/
+make preview    # browser editor (left) + live page preview (right) at http://localhost:8000/preview/
 ```
 
 ## Layout
@@ -24,7 +24,8 @@ tex/
   references.bib
 docker/Dockerfile       optional extension of mathapedia/latex
 latexmkrc               build recipe: latex -> dvips -> ps2pdf, output in build/
-preview/index.html      live SVG page preview used by `make preview`
+preview/index.html      split-pane editor + SVG page preview (layout from the LaTeX2JS playground)
+preview/server.py       static server + save endpoint used by `make preview`
 build/                  generated, git-ignored
 ```
 
@@ -34,7 +35,7 @@ build/                  generated, git-ignored
 | -------------- | ------------------------------------------------------------------------ |
 | `make`         | `latexmk -pdfps` in Docker → `build/main.pdf`                            |
 | `make watch`   | same, rebuilding whenever a file under `tex/` changes                   |
-| `make preview` | `watch` + `dvisvgm` page SVGs + static server at `localhost:8000/preview/` |
+| `make preview` | editor + `watch` + `dvisvgm` page SVGs at `localhost:8000/preview/`; edits under `tex/` autosave and rebuild |
 | `make svg`     | one SVG per page in `build/svg/` (what Mathapedia ingests)               |
 | `make figures` | `tex/figures/*.mmd` → `build/figures/*.eps` via mermaid-cli + Ghostscript |
 | `make lint`    | `chktex` on the document                                                 |

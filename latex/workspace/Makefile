@@ -2,7 +2,7 @@
 #
 #   make            build the PDF            -> build/main.pdf
 #   make watch      rebuild on every save
-#   make preview    watch + browser preview  -> http://localhost:8000
+#   make preview    watch + browser editor/preview -> http://localhost:8000/preview/
 #   make svg        one SVG per page         -> build/svg/
 #   make figures    Mermaid *.mmd -> EPS     -> build/figures/
 #   make lint       chktex
@@ -53,8 +53,10 @@ build: image-if-missing figures
 watch: image-if-missing figures
 	$(RUN) $(LATEXMK) -pvc $(MAIN)
 
-# Full-fidelity browser preview: latexmk -pvc rebuilds on save, dvisvgm turns
-# each page into SVG, preview/index.html polls and reloads. Needs MODE=-pdfps.
+# Browser editor (left) + full-fidelity preview (right): preview/server.py
+# serves the workspace and writes edits back to tex/, latexmk -pvc rebuilds,
+# dvisvgm turns each page into SVG, preview/index.html polls and reloads.
+# Needs MODE=-pdfps.
 preview: image-if-missing figures
 	@mkdir -p $(BUILD_DIR)/svg
 	@echo "==> http://localhost:$(PORT)/preview/"
@@ -62,7 +64,7 @@ preview: image-if-missing figures
 		--user "$(shell id -u):$(shell id -g)" \
 		-v "$(CURDIR)":/work -w /work -e HOME=/tmp -p $(PORT):$(PORT) \
 		$(IMAGE) sh -c '\
-		  python3 -m http.server $(PORT) --bind 0.0.0.0 >/dev/null 2>&1 & \
+		  python3 preview/server.py $(PORT) & \
 		  $(LATEXMK) -pvc -e "\$$success_cmd = q(cd /work && $(DVISVGM) && date +%s > /work/$(BUILD_DIR)/svg/stamp)" $(MAIN)'
 
 svg: build

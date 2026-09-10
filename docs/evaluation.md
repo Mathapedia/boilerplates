@@ -35,7 +35,7 @@ Both repos are the same setup with a different root file (`rls.tex` / `hvm.tex`)
 | output in `tex/`                     | everything in `build/` (git-ignored)                                                      |
 | `pyramation/pstricks-latex`, built by hand, amd64 | same Ubuntu image, now `mathapedia/latex` (Mathapedia/docker): + latexmk/chktex/latexindent/biber/IEEEtran, built and pushed multi-arch by CI |
 | committed PNG/PDF from Mermaid       | only `.mmd` committed; `make figures` renders to EPS via mermaid-cli (Docker Hub) + Ghostscript |
-| no watch / preview                   | `make watch` (`latexmk -pvc`), `make preview` (dvisvgm page SVGs + tiny static page that live-reloads) |
+| no watch / preview                   | `make watch` (`latexmk -pvc`), `make preview` (split-pane editor copied from the LaTeX2JS playground + dvisvgm page SVGs that live-reload) |
 | no lint                              | `make lint` (chktex, noisy rules off), `make fmt` (latexindent)                           |
 | CI: pull prebuilt image              | same, plus lint, page SVGs, PDF artifact, and the PDF attached to `v*` releases |
 | ad-hoc project setup                 | `pgpm init workspace --repo Mathapedia/boilerplates` with author/title/license questions   |
