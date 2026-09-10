@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Same image the Makefile uses locally (pulled from GHCR by make).
+      # Same image the Makefile uses locally (pulled from Docker Hub by make).
       # If you extend docker/Dockerfile, build it here instead:
       #   - run: make image
       - run: make lint

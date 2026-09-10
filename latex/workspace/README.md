@@ -65,7 +65,7 @@ inside that subset render identically in the PDF and in the browser.
 
 ## Adding a TeX package
 
-The image is [`mathapedia/latex`](https://github.com/Mathapedia/docker) (Docker Hub; also mirrored at `ghcr.io/mathapedia/latex`)
+The image is [`mathapedia/latex`](https://github.com/Mathapedia/docker) on Docker Hub
 (Ubuntu TeX Live: pstricks, pictures/TikZ, latex-extra, science, publishers,
 bibtex-extra, latexmk, chktex, latexindent, biber, dvisvgm). If something is
 missing, either open a PR there, or extend locally: put the Debian package in
