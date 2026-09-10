@@ -1,0 +1,6 @@
+flowchart LR
+  A[author edits tex/] --> B[make build]
+  B --> C[TeX Live in Docker]
+  C --> D[build/main.pdf]
+  C --> E[build/svg/*.svg]
+  E --> F[make preview]

@@ -1,0 +1,26 @@
+\section{Code}
+\label{sec:code}
+
+Listings use the \texttt{listings} package with the languages defined in
+\texttt{tex/headers/listings.tex}. \Cref{lst:ts} is TypeScript,
+\cref{lst:sql} is SQL with the PL/pgSQL and RLS keywords added.
+
+\begin{lstlisting}[language=typescript,caption={A TypeScript listing.},label={lst:ts}]
+export interface Paper {
+  title: string;
+  authors: readonly string[];
+}
+
+export async function build(paper: Paper): Promise<Uint8Array> {
+  const pdf = await latexmk(paper, { mode: 'pdfps' });
+  return pdf; // generics like Map<string, Paper> render fine
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=sql-extended,caption={A SQL listing.},label={lst:sql}]
+CREATE POLICY papers_owner ON papers
+  FOR SELECT
+  USING (owner_id = current_setting('jwt.claims.user_id', true)::uuid);
+
+ALTER TABLE papers ENABLE ROW LEVEL SECURITY;
+\end{lstlisting}

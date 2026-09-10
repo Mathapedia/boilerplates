@@ -1,0 +1,23 @@
+% Packages shared by the whole paper. Keep document-specific macros in main.tex.
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{graphicx}
+\graphicspath{{figures/}{../build/figures/}}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% Graphics. PSTricks needs the DVI -> PostScript route (see latexmkrc); TikZ
+% works on either route.
+\usepackage{pstricks}
+\usepackage{pst-plot}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes,calc}
+
+% hyperref last, cleveref after hyperref.
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}

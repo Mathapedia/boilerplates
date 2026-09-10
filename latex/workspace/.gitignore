@@ -1,0 +1,24 @@
+# Everything generated lands in build/ (PDF, aux files, SVG pages, EPS figures).
+build/
+
+# Stray TeX artifacts if something is run outside latexmk
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.ps
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.lof
+*.lot
+*.bak*
+
+.DS_Store
+Thumbs.db
+*~
+*.swp

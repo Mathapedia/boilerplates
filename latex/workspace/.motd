@@ -1,0 +1,13 @@
+
+  __  __       _   _                          _ _
+ |  \/  | __ _| |_| |__   __ _ _ __   ___  __| (_) __ _
+ | |\/| |/ _` | __| '_ \ / _` | '_ \ / _ \/ _` | |/ _` |
+ | |  | | (_| | |_| | | | (_| | |_) |  __/ (_| | | (_| |
+ |_|  |_|\__,_|\__|_| |_|\__,_| .__/ \___|\__,_|_|\__,_|
+                              |_|        LaTeX paper
+
+  make            build/main.pdf
+  make preview    live page preview at http://localhost:8000/preview/
+  make shell      poke around inside TeX Live
+
+  Docker is the only dependency. First build pulls TeX Live (~3 GB).

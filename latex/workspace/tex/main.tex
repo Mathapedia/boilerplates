@@ -1,0 +1,31 @@
+\documentclass[11pt]{article}
+
+\input{headers/preamble.tex}
+\input{headers/colors.tex}
+\input{headers/listings.tex}
+
+\title{____title____}
+\author{____fullName____ \\ \texttt{____email____}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  This document was generated from the Mathapedia LaTeX boilerplate. It compiles
+  with the classic \texttt{latex} $\rightarrow$ \texttt{dvips} $\rightarrow$
+  \texttt{ps2pdf} pipeline so PSTricks and TikZ figures both work, and every
+  figure in it is a text file, so the whole paper is diffable.
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/introduction.tex}
+\input{sections/graphics.tex}
+\input{sections/code.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

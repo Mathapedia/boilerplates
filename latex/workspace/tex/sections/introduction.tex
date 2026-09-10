@@ -1,0 +1,33 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Replace this section with your own. The skeleton exercises everything the
+build pipeline has to support so a broken toolchain shows up on the first
+\texttt{make build}, not the week before a deadline: cross references
+(\cref{sec:graphics}), citations~\cite{knuth1984texbook,vanzandt1993pstricks},
+theorem environments, and both figure systems.
+
+\begin{definition}[Paper]
+  \label{def:paper}
+  A \emph{paper} is a directory containing \texttt{tex/main.tex} such that
+  \texttt{make build} produces \texttt{build/main.pdf}.
+\end{definition}
+
+\begin{theorem}
+  \label{thm:reproducible}
+  If every figure in a paper is a text file and the toolchain is pinned in
+  \texttt{docker/Dockerfile}, then \cref{def:paper} holds on every machine with
+  Docker installed.
+\end{theorem}
+
+\begin{proof}
+  The TeX Live image is content addressed and the sources are in git;
+  \texttt{latexmk} is deterministic given both. See
+  \cref{sec:graphics,sec:code} for what ``figure'' and ``text file'' cover.
+\end{proof}
+
+Inline math renders as usual, $e^{i\pi} + 1 = 0$, as does display math:
+\begin{equation}
+  \label{eq:gauss}
+  \int_{-\infty}^{\infty} e^{-x^2}\,\mathrm{d}x = \sqrt{\pi}.
+\end{equation}

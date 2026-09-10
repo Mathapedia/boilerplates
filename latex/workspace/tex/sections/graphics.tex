@@ -1,0 +1,48 @@
+\section{Graphics}
+\label{sec:graphics}
+
+Three kinds of figure are supported, and they have different rendering
+stories, so pick deliberately:
+
+\begin{itemize}[nosep]
+  \item \textbf{PSTricks} (\cref{fig:pie,fig:plot}) --- rendered by
+    \texttt{dvips}/Ghostscript in the PDF build. The subset used here
+    (\texttt{pspicture}, \texttt{psline}, \texttt{pscircle}, \texttt{pswedge},
+    \texttt{psplot}, \texttt{psaxes}, \texttt{rput}, \texttt{psdots}) is also
+    what LaTeX2JS renders in the browser, so these figures can be reused as-is
+    on Mathapedia.
+  \item \textbf{TikZ} (\cref{fig:flow}) --- rendered in the PDF build only.
+    Use it for diagrams that will never need a browser rendering.
+  \item \textbf{Generated EPS} (\cref{fig:pipeline}) --- anything produced by an
+    external tool (Mermaid here). \texttt{make figures} turns
+    \texttt{tex/figures/*.mmd} into \texttt{build/figures/*.eps}; only the
+    source is committed.
+\end{itemize}
+
+\begin{figure}[ht]
+  \centering
+  \input{figures/pie.tex}
+  \caption{A PSTricks figure. Everything in it is in the LaTeX2JS subset.}
+  \label{fig:pie}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \input{figures/plot.tex}
+  \caption{A PSTricks plot with axes; \texttt{psplot} is interactive on Mathapedia.}
+  \label{fig:plot}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \input{figures/flow.tex}
+  \caption{A TikZ figure. PDF only.}
+  \label{fig:flow}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\linewidth]{pipeline}
+  \caption{A Mermaid diagram compiled to EPS by \texttt{make figures}.}
+  \label{fig:pipeline}
+\end{figure}

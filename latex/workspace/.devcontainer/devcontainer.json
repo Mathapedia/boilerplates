@@ -1,0 +1,26 @@
+{
+  "name": "____repoName____ (TeX Live)",
+  "build": { "dockerfile": "../docker/Dockerfile" },
+  "workspaceFolder": "/work",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind",
+  "forwardPorts": [8000],
+  "customizations": {
+    "vscode": {
+      "extensions": ["James-Yu.latex-workshop"],
+      "settings": {
+        "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
+        "latex-workshop.latex.recipe.default": "latexmk (pdfps)",
+        "latex-workshop.latex.recipes": [
+          { "name": "latexmk (pdfps)", "tools": ["latexmk-pdfps"] }
+        ],
+        "latex-workshop.latex.tools": [
+          {
+            "name": "latexmk-pdfps",
+            "command": "latexmk",
+            "args": ["-r", "%WORKSPACE_FOLDER%/latexmkrc", "-pdfps", "-cd", "%WORKSPACE_FOLDER%/tex/main.tex"]
+          }
+        ]
+      }
+    }
+  }
+}

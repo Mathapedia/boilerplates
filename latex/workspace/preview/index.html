@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>preview</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; background: #666; font: 13px system-ui, sans-serif; }
+  header { position: sticky; top: 0; display: flex; gap: 1em; align-items: center;
+           padding: .5em 1em; background: #222; color: #ddd; }
+  header .ok { color: #8f8; } header .bad { color: #f88; }
+  main { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 12px; }
+  main img { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.4); width: min(100%, 900px); }
+</style>
+</head>
+<body>
+<header>
+  <strong>preview</strong>
+  <span id="status">waiting for build/svg/stamp…</span>
+  <span id="pages"></span>
+</header>
+<main id="pages-root"></main>
+<script>
+// Served by `make preview`: latexmk -pvc rebuilds, dvisvgm writes one SVG per
+// page plus build/svg/stamp; we poll the stamp and swap the images in place.
+const doc = new URLSearchParams(location.search).get('doc') || 'main';
+const root = document.getElementById('pages-root');
+const status = document.getElementById('status');
+const pagesEl = document.getElementById('pages');
+let last = null;
+
+async function refresh() {
+  try {
+    const r = await fetch(`../build/svg/stamp?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.statusText);
+    const stamp = (await r.text()).trim();
+    if (stamp === last) return;
+    last = stamp;
+    let n = 0;
+    while (true) {
+      const p = n + 1;
+      const head = await fetch(`../build/svg/${doc}-${p}.svg?t=${stamp}`, { method: 'HEAD', cache: 'no-store' });
+      if (!head.ok) break;
+      let img = root.children[n];
+      if (!img) { img = document.createElement('img'); root.appendChild(img); }
+      img.src = `../build/svg/${doc}-${p}.svg?t=${stamp}`;
+      img.alt = `page ${p}`;
+      n++;
+    }
+    while (root.children.length > n) root.lastChild.remove();
+    pagesEl.textContent = `${n} page${n === 1 ? '' : 's'}`;
+    status.textContent = `rendered ${new Date(stamp * 1000).toLocaleTimeString()}`;
+    status.className = 'ok';
+  } catch (e) {
+    status.textContent = `no render yet (${e.message})`;
+    status.className = 'bad';
+  }
+}
+refresh();
+setInterval(refresh, 1000);
+</script>
+</body>
+</html>

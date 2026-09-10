@@ -1,0 +1,47 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Same image the Makefile uses locally, with the layer cache kept in GHA
+      # so only the first run pays for the TeX Live download.
+      - uses: docker/build-push-action@v6
+        with:
+          context: docker
+          tags: mathapedia/latex:local
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - run: make lint
+      - run: make svg
+
+      - run: cp build/main.pdf "build/____repoName____.pdf"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ____repoName____
+          path: |
+            build/____repoName____.pdf
+            build/svg/*.svg
+          if-no-files-found: error
+
+      - if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/____repoName____.pdf

@@ -1,0 +1,50 @@
+% Code listings. Uses `listings` (pure TeX, no shell-escape or Python needed).
+% If you prefer Pygments highlighting, install `minted` in docker/Dockerfile
+% (TLMGR_EXTRA="minted") and pass -shell-escape in latexmkrc.
+
+\lstdefinelanguage{typescript}{
+  keywords={abstract, as, async, await, break, case, catch, class, const,
+    continue, debugger, default, delete, do, else, enum, export, extends,
+    false, finally, for, from, function, if, implements, import, in,
+    instanceof, interface, let, new, null, of, package, private, protected,
+    public, readonly, return, static, super, switch, this, throw, true, try,
+    type, typeof, undefined, var, void, while, with, yield},
+  ndkeywords={boolean, number, string, any, never, unknown, object, symbol,
+    bigint, Promise, Record, Partial, Array},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]", % chktex 18
+  morestring=[b]`
+}
+
+\lstdefinelanguage{sql-extended}[]{SQL}{
+  morekeywords={POLICY, ROW, LEVEL, SECURITY, ENABLE, USING, RETURNS, LANGUAGE,
+    BEGIN, END, DECLARE, IF, THEN, ELSE, LOOP, RAISE, EXCEPTION, STABLE,
+    IMMUTABLE, VOLATILE, SECURITY, DEFINER, INVOKER, SETOF, TRIGGER, BEFORE,
+    AFTER, EACH, EXECUTE, FUNCTION, PROCEDURE, REPLACE, CURRENT_SETTING},
+  sensitive=false
+}
+
+\lstdefinestyle{paper}{
+  backgroundcolor=\color{codebackground},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codeblue}\bfseries,
+  ndkeywordstyle=\color{codeteal},
+  commentstyle=\color{codegreen}\itshape,
+  stringstyle=\color{codepurple},
+  numberstyle=\tiny\color{figmuted},
+  numbers=left,
+  numbersep=8pt,
+  frame=single,
+  framerule=0pt,
+  xleftmargin=1.5em,
+  breaklines=true,
+  breakatwhitespace=true,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=paper}

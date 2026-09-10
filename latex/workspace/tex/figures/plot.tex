@@ -1,0 +1,10 @@
+% PSTricks plot (pst-plot). psaxes + psplot are in the LaTeX2JS subset.
+\begin{pspicture}(-0.5,-1.5)(6.5,1.7)
+\psaxes[labels=none,ticks=none]{->}(0,0)(-0.5,-1.5)(6.5,1.5)
+\psplot[linecolor=figprimary,linewidth=1.2pt,plotpoints=200]{0}{6.28}{x 57.2958 mul sin}
+\psplot[linecolor=figaccent,linewidth=1.2pt,plotpoints=200]{0}{6.28}{x 57.2958 mul cos}
+\rput(6.5,-0.3){$x$}
+\rput(-0.3,1.5){$y$}
+\rput(3.2,1.4){\color{figprimary}$\sin x$}
+\rput(1.4,-1.3){\color{figaccent}$\cos x$}
+\end{pspicture}

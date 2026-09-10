@@ -1,0 +1,24 @@
+% TikZ: the build pipeline as a flow diagram. PDF only (no browser rendering).
+\begin{tikzpicture}[
+  node distance=1.1cm and 0.9cm,
+  box/.style={draw,rounded corners,minimum width=2cm,minimum height=0.8cm,
+              align=center,font=\small},
+  src/.style={box,fill=figprimary!15},
+  art/.style={box,fill=figaccent!20},
+  >={Stealth[length=2.2mm]}
+]
+\node[src] (tex) {\texttt{tex/*.tex}};
+\node[src,below=of tex] (mmd) {\texttt{figures/*.mmd}};
+\node[art,right=of mmd] (eps) {\texttt{build/figures/*.eps}};
+\node[art,right=of tex] (dvi) {\texttt{main.dvi}};
+\node[art,right=of dvi] (ps) {\texttt{main.ps}};
+\node[art,right=of ps] (pdf) {\texttt{main.pdf}};
+\node[art,below=of pdf] (svg) {\texttt{svg/*.svg}};
+
+\draw[->] (tex) -- node[above,font=\scriptsize] {latex} (dvi);
+\draw[->] (dvi) -- node[above,font=\scriptsize] {dvips} (ps);
+\draw[->] (ps) -- node[above,font=\scriptsize] {ps2pdf} (pdf);
+\draw[->] (mmd) -- node[above,font=\scriptsize] {mmdc + gs} (eps);
+\draw[->] (eps) -| (dvi);
+\draw[->] (pdf) -- node[right,font=\scriptsize] {dvisvgm} (svg);
+\end{tikzpicture}
